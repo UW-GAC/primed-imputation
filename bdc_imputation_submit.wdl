@@ -2,7 +2,7 @@ version 1.0
 
 workflow bdc_imputation_submit {
      input {
-          File token
+          String token
      }
 
      call submit { 
@@ -21,7 +21,7 @@ workflow bdc_imputation_submit {
        
 task submit {
      input {
-          File token
+          String token
      }
 
      command {
