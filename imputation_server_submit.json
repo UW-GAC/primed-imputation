@@ -1,0 +1,11 @@
+{
+  "imputation_server_submit.hostname": "https://imputation.biodatacatalyst.nhlbi.nih.gov",
+  "imputation_server_submit.token": "nf8dghoes9847fygvdkc9laq7eypdfsvedhl08ery4fd0hsf0843huefl",
+  "imputation_server_submit.vcf_files": [
+    "https://github.com/lukfor/imputationbot/raw/master/test-data/small.chr1.vcf.gz",
+    "https://github.com/lukfor/imputationbot/raw/master/test-data/small.chr2.vcf.gz"
+  ],
+  "imputation_server_submit.refpanel": "topmed-r2",
+  "imputation_server_submit.population": "all",
+  "imputation_server_results.password": "d9hsu0PXPMbKLi"
+}
