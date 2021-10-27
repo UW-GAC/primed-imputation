@@ -26,8 +26,7 @@ task submit {
 
      command {
           mkdir ~/.imputationbot
-          printf -- "-  hostname: https://imputation.biodatacatalyst.nhlbi.nih.gov\n   token: " > ~/.imputationbot/imputationbot.instances
-          cat ${token} >> ~/.imputationbot/imputationbot.instances
+          printf -- "-  hostname: https://imputation.biodatacatalyst.nhlbi.nih.gov\n   token: %s\n" ${token} > ~/.imputationbot/imputationbot.instances
           imputationbot instances
           imputationbot refpanels
      }
