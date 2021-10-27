@@ -1,0 +1,8 @@
+version: 1.2
+workflows:
+   - name: bdc_imputation_submit
+     subclass: WDL
+     primaryDescriptorPath: /bdc_imputation_submit.wdl
+     testParameterFiles:
+         - /bdc_imputation_submit.json
+         
