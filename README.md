@@ -9,8 +9,10 @@ The [Michigan imputation server](https://imputationserver.sph.umich.edu/) and th
 
 ## Docker
 
-The Dockerfile creates a docker image containing the [imputationbot](https://github.com/lukfor/imputationbot software. The
-image is available on Docker Hub as [uwgac/primed-imputation](https://hub.docker.com/r/uwgac/primed-imputation).
+The Dockerfile creates a docker image containing the
+[imputationbot](https://github.com/lukfor/imputationbot) software. The
+image is available on Docker Hub as
+[uwgac/primed-imputation](https://hub.docker.com/r/uwgac/primed-imputation).
 
 ## WDL
 
@@ -24,7 +26,8 @@ imputationbot has a command to register a token interactively; however, this com
 
 The user must specify the following inputs:
 
----|---
+input | description
+--- | ---
 token | string with the authentication token (note the example in the JSON file is not a real token)
 hostname | URL for either the TOPMed or Michigan server
 refpanel | “topmed-r2” is the only option for TOPMed, but there are multiple options for Michigan
@@ -40,7 +43,8 @@ must be provided to the results workflow.
 
 The user must specify the following inputs:
 
----|---
+input | description
+--- | ---
 token | string with the authentication token (note the example in the JSON file is not a real token)
 hostname | URL for either the TOPMed or Michigan server
 job_id | string returned by the submission workflow
