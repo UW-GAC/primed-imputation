@@ -38,6 +38,6 @@ task split_by_chrom {
      }
 
      runtime {
-        docker: "xbrianh/xsamtools:v0.5.2"
+        docker: "staphb/bcftools:1.16"
     }
 }
