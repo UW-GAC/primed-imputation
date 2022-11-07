@@ -22,13 +22,14 @@ workflow chrom_split {
 task split_by_chrom {
      input {
           File vcf_file
+          String vcf_basename = basename(vcf_file)
      }
 
      command {
           bcftools index ${vcf_file}
           bcftools query -f '%CHROM\n' ${vcf_file} | sort -u > chroms.txt
           while read -r c; do
-               bcftools view --regions "$c" -Oz -o "chr$c.vcf.gz" ${vcf_file}
+               bcftools view --regions "$c" -Oz -o ${vcf_basename}".$c.vcf.gz" ${vcf_file}
           done < chroms.txt
      }
 
