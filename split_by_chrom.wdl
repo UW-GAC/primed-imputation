@@ -25,6 +25,7 @@ task split_by_chrom {
      }
 
      command {
+          bcftools index ${vcf_file}
           bcftools query -f '%CHROM\n' ${vcf_file} | sort -u > chroms.txt
           while read -r c; do
                bcftools view --regions "$c" -Oz -o "chr$c.vcf.gz" ${vcf_file}
