@@ -11,7 +11,6 @@ workflow chrom_split {
 
      output {
           Array[File] chrom_files = split_by_chrom.chrom_files
-          File chrom_list = split_by_chrom.chrom_list
      }
 
      meta {
@@ -28,7 +27,7 @@ task split_by_chrom {
      command {
           bcftools query -f '%CHROM\n' ${vcf_file} | sort -u > chroms.txt
           while read -r c; do
-               bcftools view --regions "$c" -Oz -o "chr$c.vcf.gz"
+               bcftools view --regions "$c" -Oz -o "chr$c.vcf.gz" ${vcf_file}
           done < chroms.txt
      }
 
