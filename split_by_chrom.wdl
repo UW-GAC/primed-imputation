@@ -6,7 +6,7 @@ workflow chrom_split {
      }
 
      call split_by_chrom {
-          input: vcf_file = vcf_files[1]
+          input: vcf_file = vcf_files[0]
      }
 
      output {
