@@ -24,7 +24,7 @@ task split_by_chrom {
           File vcf_file
      }
 
-     String vcf_basename = basename(vcf_file)
+     String vcf_basename = basename(vcf_file, ".vcf.gz")
 
      command {
           bcftools index ${vcf_file}
