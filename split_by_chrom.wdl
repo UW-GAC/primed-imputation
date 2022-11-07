@@ -11,6 +11,7 @@ workflow chrom_split {
 
      output {
           Array[File] chrom_files = split_by_chrom.chrom_files
+          File chrom_list = split_by_chrom.chrom_list
      }
 
      meta {
@@ -33,6 +34,7 @@ task split_by_chrom {
 
      output {
           Array[File] chrom_files = glob("*.vcf.gz")
+          File chrom_list = "chroms.txt"
      }
 
      runtime {
