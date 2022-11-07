@@ -1,0 +1,5 @@
+{
+    "chrom_split.vcf_files": [
+        "gs://fc-106cccfd-1201-4f53-aaa8-949630868fba/submissions/19266730-a01e-405e-93e5-37510b58db8e/plink2_bed2vcf/6dd6e074-318d-4917-9a9c-f34bdaf296db/call-results/hapmap3_r3_b37_Ilmn1M.vcf.gz"
+    ]
+}
