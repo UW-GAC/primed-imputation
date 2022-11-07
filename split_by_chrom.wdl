@@ -22,8 +22,9 @@ workflow chrom_split {
 task split_by_chrom {
      input {
           File vcf_file
-          String vcf_basename = basename(vcf_file)
      }
+
+     String vcf_basename = basename(vcf_file)
 
      command {
           bcftools index ${vcf_file}
