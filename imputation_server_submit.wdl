@@ -74,9 +74,8 @@ task submit {
      command {
           mkdir ~/.imputationbot
           printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
-          echo "imputationbot impute --file ${sep=' ' vcf_files} --refpanel ${refpanel} --population ${population} --password ${password} > tmp"
-          #grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
-          echo "123" > job_id.txt
+          imputationbot impute --file ${sep=' ' vcf_files} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
+          grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
      }
 
      output {
