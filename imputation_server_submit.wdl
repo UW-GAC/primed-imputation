@@ -6,6 +6,7 @@ workflow imputation_server_submit {
           String token
           Array[File] vcf_files
           Boolean multi_chrom_file
+          String build
           String refpanel
           String population
           String password
@@ -22,6 +23,7 @@ workflow imputation_server_submit {
           input: hostname = hostname,
                  token = token,
                  vcf_files = inp_files,
+                 build = build,
                  refpanel = refpanel,
                  population = population,
                  password = password
@@ -66,6 +68,7 @@ task submit {
           String hostname
           String token
           Array[File] vcf_files
+          String build
           String refpanel
           String population
           String password
@@ -74,7 +77,7 @@ task submit {
      command {
           mkdir ~/.imputationbot
           printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
-          imputationbot impute --file ${sep=' ' vcf_files} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
+          imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
           grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
      }
 
