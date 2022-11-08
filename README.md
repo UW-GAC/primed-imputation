@@ -29,10 +29,11 @@ The user must specify the following inputs:
 input | description
 --- | ---
 token | string with the authentication token (note the example in the JSON file is not a real token)
-hostname | URL for either the TOPMed or Michigan server
-refpanel | “topmed-r2” is the only option for TOPMed, but there are multiple options for Michigan
+hostname | URL for either the [TOPMed](https://imputation.biodatacatalyst.nhlbi.nih.gov/) or [Michigan](https://imputationserver.sph.umich.edu/) server
+refpanel | “topmed-r2” is the only option for TOPMed, but there are [multiple options](https://imputationbot.readthedocs.io/en/latest/reference-panels/) for Michigan
 population | “all” for TOPMed, multiple options for Michigan
-vcf_files | files to impute
+vcf_files | files to impute. if `multi_chrom_file` is `true`, only one file should be provided.
+multi_chrom_file | boolean, set to 'true' if `vcf_files` contains a single file with multiple chromosomes; `false` if `vcf_files` are already split by chromosome
 password | string that must also be supplied to the results workflow for download. Specifying the password during job submission means the user doesn’t have to rely on receiving the password by email.
 
 When VCF files are submitted to the imputation server, a job_id is

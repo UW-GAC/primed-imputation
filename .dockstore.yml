@@ -10,4 +10,9 @@ workflows:
      primaryDescriptorPath: /imputation_server_results.wdl
      testParameterFiles:
          - /imputation_server_results.json
+   - name: chrom_split
+     subclass: WDL
+     primaryDescriptorPath: /split_by_chrom.wdl
+     testParameterFiles:
+         - /split_by_chrom.json
          
