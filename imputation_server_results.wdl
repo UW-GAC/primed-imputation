@@ -6,13 +6,15 @@ workflow imputation_server_results {
           String token
           String job_id
           String password
+          Int mem_gb
      }
 
      call results { 
           input: hostname = hostname,
                  token = token,
                  job_id = job_id,
-                 password = password
+                 password = password,
+                 mem_gb = mem_gb
      }
 
      output {
@@ -35,6 +37,7 @@ task results {
           String token
           String job_id
           String password
+          Int mem_gb
      }
 
      command {
@@ -54,5 +57,6 @@ task results {
 
      runtime {
           docker: "uwgac/primed-imputation:0.1.0"
+          memory: "${mem_gb}GB"
      }
 }

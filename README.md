@@ -51,6 +51,7 @@ token | string with the authentication token (note the example in the JSON file 
 hostname | URL for either the TOPMed or Michigan server
 job_id | string returned by the submission workflow
 password | string that must also be supplied to the results workflow for download. Specifying the password during job submission means the user doesn’t have to rely on receiving the password by email.
+mem_gb | memory (in GB) required. If in doubt, consult the Jobs page of the imputation server to view the total file size of the results.
 
 The imputed genotypes and accompanying files (log, QC report, statistics, md5) are downloaded to the user’s workspace.
 
