@@ -83,7 +83,6 @@ task submit {
           #imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
           #grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
 
-          echo '
           curl ${server} \
                -X "POST" \
                -H "X-Auth-Token: ${token}" \
@@ -92,8 +91,9 @@ task submit {
                -F "refpanel=apps@${refpanel}" \
                -F "population=${population}" \
                -F "meta=${true='yes' false ='no' meta_imputation}" \
-               -F "password=${password}"
-          ' > job_id.txt
+               -F "password=${password}" \
+               > job_id.json
+          cat job_id.json | json id > job_id.txt
      }
 
      output {
