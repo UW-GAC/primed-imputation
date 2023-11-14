@@ -81,6 +81,7 @@ task submit {
      }
 
      String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver" else "minimac4"
+     String panel = if (refpanel == "topmed-r2") then "apps@" + refpanel else refpanel
 
      command {
           #mkdir ~/.imputationbot
@@ -93,7 +94,7 @@ task submit {
                -H "X-Auth-Token: ${token}" \
                -F "files=@${sep='" -F "files=@' vcf_files}" \
                -F "build=${build}" \
-               -F "refpanel=apps@${refpanel}" \
+               -F "refpanel=${panel}" \
                -F "population=${population}" \
                -F "meta=${true='yes' false ='no' meta_imputation}" \
                -F "r2Filter=${r2_filter}" \
