@@ -11,6 +11,7 @@ workflow imputation_server_submit {
           String population
           String password
           Boolean? meta_imputation
+          Float? r2_filter
      }
 
      if (multi_chrom_file) {
@@ -28,7 +29,8 @@ workflow imputation_server_submit {
                  refpanel = refpanel,
                  population = population,
                  password = password,
-                 meta_imputation = meta_imputation
+                 meta_imputation = meta_imputation,
+                 r2_filter = r2_filter
      }
 
      output {
@@ -75,6 +77,7 @@ task submit {
           String population
           String password
           Boolean meta_imputation = true
+          Float r2_filter = 0
      }
 
      String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver" else "minimac4"
@@ -93,6 +96,7 @@ task submit {
                -F "refpanel=apps@${refpanel}" \
                -F "population=${population}" \
                -F "meta=${true='yes' false ='no' meta_imputation}" \
+               -F "r2Filter=${r2_filter}" \
                -F "password=${password}" \
                > submission_results.json
           cat submission_results.json | json id > job_id.txt
