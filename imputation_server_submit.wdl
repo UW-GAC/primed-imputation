@@ -10,6 +10,7 @@ workflow imputation_server_submit {
           String refpanel
           String population
           String password
+          Boolean? meta_imputation
      }
 
      if (multi_chrom_file) {
@@ -26,7 +27,8 @@ workflow imputation_server_submit {
                  build = build,
                  refpanel = refpanel,
                  population = population,
-                 password = password
+                 password = password,
+                 meta_imputation = meta_imputation
      }
 
      output {
@@ -92,12 +94,13 @@ task submit {
                -F "population=${population}" \
                -F "meta=${true='yes' false ='no' meta_imputation}" \
                -F "password=${password}" \
-               > job_id.json
-          cat job_id.json | json id > job_id.txt
+               > submission_results.json
+          cat submission_results.json | json id > job_id.txt
      }
 
      output {
           String job_id = read_string("job_id.txt")
+          File submission_results = "submission_results.json"
      }
 
      runtime {
