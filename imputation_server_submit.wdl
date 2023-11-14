@@ -101,6 +101,6 @@ task submit {
      }
 
      runtime {
-          docker: "uwgac/primed-imputation:0.1.0"
+          docker: "uwgac/primed-imputation:0.2.0"
      }
 }
