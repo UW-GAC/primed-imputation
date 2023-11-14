@@ -72,13 +72,28 @@ task submit {
           String refpanel
           String population
           String password
+          Boolean meta_imputation = true
      }
 
+     String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver" else "minimac4"
+
      command {
-          mkdir ~/.imputationbot
-          printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
-          imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
-          grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
+          #mkdir ~/.imputationbot
+          #printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
+          #imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
+          #grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
+
+          echo '
+          curl ${server} \
+               -X "POST" \
+               -H "X-Auth-Token: ${token}" \
+               -F "files=@${sep='" -F "files=@' vcf_files}" \
+               -F "build=${build}" \
+               -F "refpanel=apps@${refpanel}" \
+               -F "population=${population}" \
+               -F "meta=${true='yes' false ='no' meta_imputation}" \
+               -F "password=${password}"
+          ' > job_id.txt
      }
 
      output {
