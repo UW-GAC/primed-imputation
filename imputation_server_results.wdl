@@ -56,7 +56,7 @@ task results {
      }
 
      runtime {
-          docker: "uwgac/primed-imputation:0.1.0"
+          docker: "uwgac/primed-imputation:0.2.0"
           disks: "local-disk ${disk_gb} SSD"
      }
 }
