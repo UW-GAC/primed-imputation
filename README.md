@@ -33,8 +33,10 @@ hostname | URL for either the [TOPMed](https://imputation.biodatacatalyst.nhlbi.
 refpanel | “topmed-r2” is the only option for TOPMed, but there are multiple options for Michigan (see below)
 population | “all” for TOPMed, multiple options for Michigan (see below)
 vcf_files | files to impute. if `multi_chrom_file` is `true`, only one file should be provided.
-multi_chrom_file | boolean, set to 'true' if `vcf_files` contains a single file with multiple chromosomes; `false` if `vcf_files` are already split by chromosome
-build | genome build of the input files, 'hg19' or 'hg38'
+multi_chrom_file | boolean, set to `true` if `vcf_files` contains a single file with multiple chromosomes; `false` if `vcf_files` are already split by chromosome
+build | genome build of the input files, `hg19` or `hg38`
+r2_filter | r2 filter to be applied to the results. Default is `0`, other possible values are `0.001`, `0.1`, `0.2`, `0.3`
+meta_imputation | boolean for whether to generate a meta-imputation file. Default is `true`.
 password | string that must also be supplied to the results workflow for download. Specifying the password during job submission means the user doesn’t have to rely on receiving the password by email.
 
 When VCF files are submitted to the imputation server, a job_id is

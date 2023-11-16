@@ -10,6 +10,8 @@ workflow imputation_server_submit {
           String refpanel
           String population
           String password
+          Boolean? meta_imputation
+          Float? r2_filter
      }
 
      if (multi_chrom_file) {
@@ -26,7 +28,9 @@ workflow imputation_server_submit {
                  build = build,
                  refpanel = refpanel,
                  population = population,
-                 password = password
+                 password = password,
+                 meta_imputation = meta_imputation,
+                 r2_filter = r2_filter
      }
 
      output {
@@ -72,20 +76,39 @@ task submit {
           String refpanel
           String population
           String password
+          Boolean meta_imputation = true
+          Float r2_filter = 0
      }
 
+     String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver" else "minimac4"
+     String panel = if (refpanel == "topmed-r2") then "apps@" + refpanel else refpanel
+
      command {
-          mkdir ~/.imputationbot
-          printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
-          imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
-          grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
+          #mkdir ~/.imputationbot
+          #printf -- "-  hostname: %s\n   token: %s\n" ${hostname} ${token} > ~/.imputationbot/imputationbot.instances
+          #imputationbot impute --file ${sep=' ' vcf_files} --build ${build} --refpanel ${refpanel} --population ${population} --password ${password} > tmp
+          #grep -o \'job.*\' tmp | sed "s/'//g" > job_id.txt
+
+          curl ${server} \
+               -X "POST" \
+               -H "X-Auth-Token: ${token}" \
+               -F "files=@${sep='" -F "files=@' vcf_files}" \
+               -F "build=${build}" \
+               -F "refpanel=${panel}" \
+               -F "population=${population}" \
+               -F "meta=${true='yes' false ='no' meta_imputation}" \
+               -F "r2Filter=${r2_filter}" \
+               -F "password=${password}" \
+               > submission_results.json
+          cat submission_results.json | json id > job_id.txt
      }
 
      output {
           String job_id = read_string("job_id.txt")
+          File submission_results = "submission_results.json"
      }
 
      runtime {
-          docker: "uwgac/primed-imputation:0.1.0"
+          docker: "uwgac/primed-imputation:0.2.0"
      }
 }

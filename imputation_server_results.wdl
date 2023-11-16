@@ -6,7 +6,7 @@ workflow imputation_server_results {
           String token
           String job_id
           String password
-          Int disk_gb
+          Int? disk_gb
      }
 
      call results { 
@@ -37,7 +37,7 @@ task results {
           String token
           String job_id
           String password
-          Int? disk_gb = 10
+          Int disk_gb = 10
      }
 
      command {
@@ -56,7 +56,7 @@ task results {
      }
 
      runtime {
-          docker: "uwgac/primed-imputation:0.1.0"
+          docker: "uwgac/primed-imputation:0.2.0"
           disks: "local-disk ${disk_gb} SSD"
      }
 }
