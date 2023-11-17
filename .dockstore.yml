@@ -15,4 +15,7 @@ workflows:
      primaryDescriptorPath: /split_by_chrom.wdl
      testParameterFiles:
          - /split_by_chrom.json
+   - name: imputed_data_model
+     subclass: WDL
+     primaryDescriptorPath: /imputed_data_model.wdl
          
