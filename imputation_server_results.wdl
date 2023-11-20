@@ -121,6 +121,6 @@ task imputation_data_model {
      }
 
      runtime {
-          docker: "ghcr.io/anvilproject/anvil-rstudio-bioconductor:3.18.0"
+          docker: "us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.18.0"
      }
 }
