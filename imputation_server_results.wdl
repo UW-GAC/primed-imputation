@@ -81,7 +81,7 @@ task imputation_data_model {
         library(stringr); \
         dat <- tibble(field='sample_set_id', value='~{sample_set_id}'); \
         dat <- bind_rows(dat, tibble(field='source_dataset_id', value='~{source_dataset_id}')); \
-        dat <- bind_rows(dat, tibble(field='source_genotypes, value='~{source_genotypes}')); \
+        dat <- bind_rows(dat, tibble(field='source_genotypes', value='~{source_genotypes}')); \
         dat <- bind_rows(dat, tibble(field='reference_panel', value='~{reference_panel}')); \
         dat <- bind_rows(dat, tibble(field='reference_assembly', value='~{reference_assembly}')); \
         dat <- bind_rows(dat, tibble(field='imputation_software', value='~{imputation_software}')); \
