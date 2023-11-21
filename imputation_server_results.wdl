@@ -1,5 +1,7 @@
 version 1.0
 
+import "https://raw.githubusercontent.com/UW-GAC/primed-file-checks/main/validate_genotype_model.wdl" as validate
+
 workflow imputation_server_results {
      input {
           String hostname
@@ -7,7 +9,20 @@ workflow imputation_server_results {
           String job_id
           String password
           Int? disk_gb
+          String sample_set_id
+          String source_dataset_id
+          String source_genotypes
+          String refpanel
+          Float r2_filter
+          String model_url
+          String workspace_name
+          String workspace_namespace
+          Boolean import_tables = true
+          Boolean overwrite = true
      }
+
+     String reference_assembly = if (refpanel == "topmed-r2" || refpanel == "1000g-phase3-low" || refpanel == "1000g-phase3-deep") then "GRCh38" else "GRCh37"
+     String quality_filter = if (r2_filter == 0) then "None" else "r2=" + r2_filter
 
      call results { 
           input: hostname = hostname,
@@ -17,12 +32,33 @@ workflow imputation_server_results {
                  disk_gb = disk_gb
      }
 
+    call imputation_data_model {
+          input: imputed_files = results.imputed,
+               sample_set_id = sample_set_id,
+               source_dataset_id = source_dataset_id,
+               source_genotypes = source_genotypes,
+               reference_panel = refpanel,
+               reference_assembly = reference_assembly,
+               quality_filter = quality_filter
+    }
+
+    call validate.validate {
+          input: table_files = imputation_data_model.table_files,
+               model_url = model_url,
+               workspace_name = workspace_name,
+               workspace_namespace = workspace_namespace,
+               overwrite = overwrite,
+               import_tables = import_tables
+    }
+    
      output {
           Array[File] imputed = results.imputed
           File md5 = results.md5
           File qc_report = results.qc_report
           Array[File] qc_stats = results.qc_stats
           Array[File] log = results.log
+          File validation_report = validate.validation_report
+          Array[File]? tables = validate.tables
      }
 
      meta {
@@ -69,9 +105,9 @@ task imputation_data_model {
           String source_dataset_id
           String source_genotypes
           String reference_panel
-          String reference_assembly = "GRCh38"
+          String reference_assembly
           String imputation_software = "Minimac4"
-          String phasing_software = "Eagle2"
+          String phasing_software = "Eagle2.4"
           String quality_filter
      }
 
