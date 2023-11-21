@@ -13,7 +13,7 @@ workflow imputation_server_results {
           String source_dataset_id
           String source_genotypes
           String refpanel
-          Float r2_filter
+          Float r2_filter = 0
           String model_url
           String workspace_name
           String workspace_namespace
