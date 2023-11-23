@@ -45,6 +45,8 @@ must be provided to the results workflow.
 
 ### Retrieving results
 
+The workspace specified by `workspace_name` and `workspace_namespace` must already contain the subject, sample, and sample_set tables. The resulting files are added as imputation_dataset and imputation_file tables.
+
 The user must specify the following inputs:
 
 input | description
@@ -54,6 +56,17 @@ hostname | URL for either the TOPMed or Michigan server
 job_id | string returned by the submission workflow
 password | string that must also be supplied to the results workflow for download. Specifying the password during job submission means the user doesn’t have to rely on receiving the password by email.
 disk_gb | Disk size (in GB) required. If in doubt, consult the Jobs page of the imputation server to view the total file size of the results.
+refpanel | The reference panel used for imputation (same value as from imputation_server_submit)
+r2_filter | r2 filter that was applied to the results (same value as from imputation_server_submit)
+sample_set_id | The sample_set_id of the dataset that was imputed
+source_dataset_id | The array_dataset_id of the dataset that was imputed
+source_genotypes | A description of the array used for the dataset that was imputed
+model_url | A URL providing the path to the data model in JSON format.
+import_tables | A boolean indicating whether data model tables should be imported to the workspace.
+overwrite | A boolean indicating whether existing rows in the workspace data tables should be overwritten.
+workspace_name | A string with the workspace name. e.g, if the workspace URL is https://anvil.terra.bio/#workspaces/fc-product-demo/Terra-Workflows-Quickstart, the workspace name is "Terra-Workflows-Quickstart"
+workspace_namespace | A string with the workspace name. e.g, if the workspace URL is https://anvil.terra.bio/#workspaces/fc-product-demo/Terra-Workflows-Quickstart, the workspace namespace is "fc-product-demo"
+vcf_disk_gb | Disk space required for each VCF file (default 10 GB). If the job fails due to lack of disk space, try setting this to a larger value.
 
 The imputed genotypes and accompanying files (log, QC report, statistics, md5) are downloaded to the user’s workspace.
 
