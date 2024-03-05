@@ -6,7 +6,7 @@
     "https://github.com/lukfor/imputationbot/raw/master/test-data/small.chr2.vcf.gz"
   ],
   "imputation_server_submit.build": "hg19",
-  "imputation_server_submit.refpanel": "topmed-r2",
+  "imputation_server_submit.refpanel": "topmed-r3",
   "imputation_server_submit.population": "all",
   "imputation_server_submit.password": "d9hsu0PXPMbKLi"
 }

@@ -21,7 +21,7 @@ workflow imputation_server_results {
           Boolean overwrite = true
      }
 
-     String reference_assembly = if (refpanel == "topmed-r2" || refpanel == "1000g-phase3-low" || refpanel == "1000g-phase3-deep") then "GRCh38" else "GRCh37"
+     String reference_assembly = if (refpanel == "topmed-r3" || refpanel == "1000g-phase3-low" || refpanel == "1000g-phase3-deep") then "GRCh38" else "GRCh37"
      String quality_filter = if (r2_filter == 0) then "None" else "r2=" + r2_filter
 
      call results { 
