@@ -158,6 +158,6 @@ task imputation_data_model {
      }
 
      runtime {
-          docker: "rocker:tidyverse:4"
+          docker: "rocker/tidyverse:4"
      }
 }
