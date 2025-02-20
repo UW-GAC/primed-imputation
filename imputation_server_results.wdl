@@ -125,8 +125,7 @@ task imputation_data_model {
         dat <- bind_rows(dat, tibble(field='phasing_software', value='~{phasing_software}')); \
         dat <- bind_rows(dat, tibble(field='quality_filter', value='~{quality_filter}')); \
         readr::write_tsv(dat, 'imputation_dataset_table.tsv'); \
-        parse_array <- function(x) unlist(strsplit(x, split=' ', fixed=TRUE)); \
-        files <- parse_array('~{sep=' ' imputed_files}'); \
+        files <- readLines('~{write_lines(imputed_files)}'); \
         chr <- str_extract(files, 'chr[:alnum:]+[:punct:]'); \
         chr <- sub('chr', '', chr, fixed=TRUE); \
         chr <- sub('.', '', chr, fixed=TRUE); \
