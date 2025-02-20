@@ -158,6 +158,6 @@ task imputation_data_model {
      }
 
      runtime {
-          docker: "rocker/tidyverse:4"
+          docker: "us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.16.0"
      }
 }
