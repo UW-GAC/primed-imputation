@@ -9,6 +9,7 @@ workflow run_data_model {
           String source_dataset_id
           String source_genotypes
           String reference_panel
+          String reference_assembly
           String quality_filter
      }
 
@@ -18,6 +19,7 @@ workflow run_data_model {
         source_dataset_id = source_dataset_id,
         source_genotypes = source_genotypes,
         reference_panel = reference_panel,
+        reference_assembly = reference_assembly,
         quality_filter = quality_filter
     }
     

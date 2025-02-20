@@ -112,6 +112,7 @@ task imputation_data_model {
      }
 
      command <<<
+        set -e -o pipefail
         Rscript -e "\
         library(dplyr); \
         library(stringr); \
@@ -157,6 +158,6 @@ task imputation_data_model {
      }
 
      runtime {
-          docker: "us.gcr.io/broad-dsp-gcr-public/anvil-rstudio-bioconductor:3.18.0"
+          docker: "rocker:tidyverse:4"
      }
 }
