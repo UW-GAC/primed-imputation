@@ -1,0 +1,4 @@
+{
+  "imputation_server_filter.info_file": "testdata/info_chr1_1.txt.gz",
+  "imputation_server_filter.r2_minimum": "0.5"
+}
