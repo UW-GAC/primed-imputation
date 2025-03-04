@@ -18,4 +18,8 @@ workflows:
    - name: imputed_data_model
      subclass: WDL
      primaryDescriptorPath: /imputed_data_model.wdl
-         
+   - name: imputation_server_filter
+     subclass: WDL
+     primaryDescriptorPath: /imputation_server_filter.wdl
+     testParameterFiles:
+         - /imputation_server_filter.json
