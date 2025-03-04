@@ -64,7 +64,7 @@ x2
 # Check against the filtered output
 
 ```{r}
-filtered_ids = read_tsv("filtered_ids.txt", col_names=c("SNP"), show_col_types=F)
+filtered_ids = read_tsv("concat.txt", col_names=c("SNP"), show_col_types=F)
 filtered_ids
 ```
 
@@ -81,4 +81,19 @@ x
 
 summary(x$R2_1)
 summary(x$R2_2)
+```
+
+## Make sure that there are no variants that have R2 > 0.5 in both groups
+
+```{r}
+x = x1 %>%
+    left_join(x2, by="SNP", suffix=c("_1", "_2")) %>%
+    mutate(in_filter_file = SNP %in% filtered_ids$SNP)
+
+ggplot(x, aes(x=R2_1, y=R2_2, color=in_filter_file)) +
+    geom_point() +
+    geom_abline(intercept=0, slope=1) +
+    geom_vline(xintercept=0.5, linetype="dashed") +
+    geom_hline(yintercept=0.5, linetype="dashed") +
+    coord_equal()
 ```

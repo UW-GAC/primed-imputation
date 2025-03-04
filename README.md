@@ -77,20 +77,18 @@ The imputed genotypes and accompanying files (log, QC report, statistics, md5) a
 
 This repository also provides a WDL to extract a set of filtered variant ids using R2 value in the info files.
 The user can specify multiple input info files and an R2 threshold.
-Info files are expected to have variants from only one chromosome per file.
 Variant ids are returned in CHROM:POS:REF:ALT format so that they can be used with other PRIMED workflows that expect this format of variant id.
 
-If multiple info files are provided, filtering is performed as follows:
+Variant filtering is performed as follows:
 
-- for a single chromosome, variants are included only if the R2 value is greater than or equal to the specified R2 value in all input files for that chromosome.
-- the set of filtered variants for each chromosome are then combined across all chromosomes
-
+- variants within one sub-array of files are only kept is the R2 value is greater than or equal to the specified R2 value in **all** files
+- filtered variants are then concatenated across all sub-arrays
 
 The user must specify the following inputs:
 
 input | description
 --- | ---
-info files | An array of info files returned by the imputation server
+info files | An Array of arrays of info files returned by the imputation server. The intersection of variants after filtering in each array is kept
 r2_minimum | The minimum R2 threshold to filter on
 
 

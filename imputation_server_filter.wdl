@@ -2,24 +2,35 @@ version 1.0
 
 workflow imputation_server_filter {
      input {
-        Array[File] info_files
+        Array[Array[File]] info_files
         Float r2_minimum
      }
 
-    scatter (info_file in info_files) {
-        call filter_info_file {
-            input: info_file = info_file,
-                    r2_minimum = r2_minimum
+    scatter(files in info_files) {
+
+        scatter (info_file in files) {
+            call filter_info_file {
+                input: info_file = info_file,
+                        r2_minimum = r2_minimum
+            }
+
         }
+
+        call intersect {
+            input: vcf_files = filter_info_file.filtered_info_file,
+                    index_files = filter_info_file.filtered_index_file
+        }
+
     }
 
-     output {
-          File variant_id_file = intersect_by_chromosome.filtered_id_file
-     }
-
-    call intersect_by_chromosome {
-        input: filtered_files = filter_info_file.filtered_info_file
+    call concat_files {
+        input: files = intersect.filtered_id_file
     }
+
+    output {
+        File variant_file = concat_files.output_file
+    }
+
 
      meta {
           author: "Adrienne Stilp"
@@ -35,43 +46,90 @@ task filter_info_file {
     }
 
     Int disk_gb = ceil(size(info_file, "GB")) + 2
-    String output_file = "subset_" + basename(info_file)
 
     command {
-        bcftools query \
-            -f '%CHROM:%POS:%REF:%ALT\n' \
+        bcftools view \
+            -G \
             -e "INFO/R2 < ~{r2_minimum}" \
             ~{info_file} \
-            -o ~{output_file}
+            -o subset.vcf.gz
+
+        bcftools index subset.vcf.gz
     }
 
     output {
-        File filtered_info_file = output_file
+        File filtered_info_file = "subset.vcf.gz"
+        File filtered_index_file = "subset.vcf.gz.csi"
     }
 
     runtime {
-        docker: "staphb/bcftools:1.16"
+        docker: "staphb/bcftools:1.20"
         disks: "local-disk ${disk_gb} SSD"
     }
 }
 
 
-task intersect_by_chromosome {
+task intersect {
     input {
-        Array[File] filtered_files
+        Array[File] vcf_files
+        Array[File] index_files
     }
 
-    command {
-        Rscript /usr/local/primed-imputation/intersect_by_chromosome.R \
-            --input ${sep=' ' filtered_files} \
-            --output filtered_ids.txt
-    }
+    Int n_files = length(vcf_files)
+
+    command <<<
+        set -e -o pipefail
+
+        # We need to create a file that lists the VCF files and their indexes.
+        # Index file paths cannot be assumed due to localization, so we will explicitly specify them.
+        # Format expected by bcftools:
+        # <VCF_FILE>##idx##<INDEX_FILE>
+
+        echo "writing input file"
+        VCF_ARRAY=(~{sep=" " vcf_files}) # Load array into bash variable
+        INDEX_ARRAY=(~{sep=" " index_files}) # Load array into bash variable
+        for idx in ${!VCF_ARRAY[*]}
+        do
+            echo "${VCF_ARRAY[$idx]}##idx##${INDEX_ARRAY[$idx]}"
+        done > files.txt
+
+        # Perform the intersection
+        bcftools isec \
+            -n =2 \
+            -l files.txt \
+            -w 1 |
+            bcftools query \
+            -f '%CHROM:%POS:%REF:%ALT\n' \
+            > filtered_ids.txt
+    >>>
 
     output {
         File filtered_id_file = "filtered_ids.txt"
     }
 
     runtime {
-        docker: "uwgac/primed-imputation-filter:0.1.0"
+        docker: "staphb/bcftools:1.20"
+    }
+
+}
+
+task concat_files {
+    input {
+        Array[File] files
+    }
+
+    Int disk_gb = ceil(size(files, "GB")*2.5) + 5
+
+    command <<<
+        cat ~{sep=' ' files} > concat.txt
+    >>>
+
+    output {
+        File output_file = "concat.txt"
+    }
+
+    runtime {
+        docker: "staphb/bcftools:1.20"
+        disks: "local-disk ${disk_gb} SSD"
     }
 }

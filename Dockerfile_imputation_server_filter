@@ -1,9 +1,0 @@
-FROM rocker/tidyverse:4.4.1
-
-RUN Rscript -e 'install.packages(c("argparser"), repos="https://cloud.r-project.org")'
-
-# Check out the repository.
-RUN cd /usr/local && \
-    git clone -b filter-workflow https://github.com/UW-GAC/primed-imputation.git
-
-CMD ["/bin/bash"]
