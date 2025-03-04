@@ -1,0 +1,84 @@
+---
+title: "Check output from imputation_server_filter"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(glue)
+```
+
+# Read in the input data.
+
+## First group
+
+```{r}
+i = 1
+(files = list.files(path=".", pattern=glue("_{i}.txt.gz"), full.names=TRUE))
+x = files %>%
+    lapply(read_tsv, comment="#", col_names=c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO"), show_col_types=F) %>%
+    bind_rows()
+```
+
+
+Extract R2 values from the INFO column.
+```{r}
+x = x %>%
+    mutate(R2 = str_extract(INFO, "R2=([0-9.]+)", group=1)) %>%
+    mutate(
+        SNP = paste(CHROM, POS, REF, ALT, sep=":"),
+        R2 = as.numeric(R2),
+    ) %>%
+    select(SNP, R2)
+
+x1 <- x
+x1
+```
+
+## Second group
+
+```{r}
+i = 2
+(files = list.files(path=".", pattern=glue("_{i}.txt.gz"), full.names=TRUE))
+x = files %>%
+    lapply(read_tsv, comment="#", col_names=c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO"), show_col_types=F) %>%
+    bind_rows()
+```
+
+
+Extract R2 values from the INFO column.
+```{r}
+x = x %>%
+    mutate(R2 = str_extract(INFO, "R2=([0-9.]+)", group=1)) %>%
+    mutate(
+        SNP = paste(CHROM, POS, REF, ALT, sep=":"),
+        R2 = as.numeric(R2),
+    ) %>%
+    select(SNP, R2)
+
+x2 <- x
+x2
+```
+
+# Check against the filtered output
+
+```{r}
+filtered_ids = read_tsv("filtered_ids.txt", col_names=c("SNP"), show_col_types=F)
+filtered_ids
+```
+
+```{r}
+stopifnot(all(filtered_ids$SNP %in% x1$SNP))
+stopifnot(all(filtered_ids$SNP %in% x2$SNP))
+```
+
+## Check the R2 value of both groups
+
+```{r}
+x = filtered_ids %>% left_join(x1, by="SNP") %>% left_join(x2, by="SNP", suffix=c("_1", "_2"))
+x
+
+summary(x$R2_1)
+summary(x$R2_2)
+```
