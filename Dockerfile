@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     nodejs
 
 RUN cd /usr/local/bin && \
-    curl -sL imputationbot.now.sh | bash
+    curl -sL imputationbot.now.sh/v2 | bash
 
 RUN cd /usr/local/bin && \
     curl -L https://github.com/trentm/json/raw/master/lib/json.js > json && \
