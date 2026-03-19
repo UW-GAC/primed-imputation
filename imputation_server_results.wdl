@@ -55,7 +55,6 @@ workflow imputation_server_results {
     
      output {
           Array[String] imputed = imputation_data_model.imputed_file_paths
-          File md5 = results.md5
           File qc_report = results.qc_report
           Array[File] qc_stats = results.qc_stats
           Array[File] log = results.log
@@ -85,12 +84,10 @@ task results {
      }
 
      output {      
-          #Array[File] imputed = glob("${job_id}/*/*")
-          Array[File] imputed = glob("${job_id}/local/*.gz")
-          File md5 = "${job_id}/local/results.md5"
-          File qc_report = "${job_id}/qcreport/qcreport.html"
-          Array[File] qc_stats = glob("${job_id}/statisticDir/*.txt")
-          Array[File] log = glob("${job_id}/logfile/*.log")
+          Array[File] imputed = glob("${job_id}/output/*.gz")
+          File qc_report = "${job_id}/output/quality-control.html"
+          Array[File] qc_stats = glob("${job_id}/output/statistics/*.txt")
+          Array[File] log = glob("${job_id}/output/qc_report.txt")
      }
 
      runtime {
