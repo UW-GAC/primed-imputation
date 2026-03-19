@@ -80,7 +80,7 @@ task submit {
           Float r2_filter = 0
      }
 
-     String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver" else "minimac4"
+     String server = hostname + "/api/v2/jobs/submit/" + if (hostname == "https://imputation.biodatacatalyst.nhlbi.nih.gov") then "imputationserver2" else "minimac4"
      String panel = if (refpanel == "topmed-r3") then "apps@" + refpanel else refpanel
 
      command {
