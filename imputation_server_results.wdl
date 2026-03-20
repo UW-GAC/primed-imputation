@@ -4,6 +4,7 @@ import "https://raw.githubusercontent.com/UW-GAC/primed-file-checks/main/validat
 
 workflow imputation_server_results {
      input {
+          String dest_bucket
           String hostname
           String token
           String job_id
@@ -33,7 +34,8 @@ workflow imputation_server_results {
      }
 
     call imputation_data_model {
-          input: imputed_files = results.imputed,
+          input: dest_bucket = dest_bucket,
+               imputed_files = results.imputed,
                sample_set_id = sample_set_id,
                source_dataset_id = source_dataset_id,
                source_genotypes = source_genotypes,
@@ -52,11 +54,10 @@ workflow imputation_server_results {
     }
     
      output {
-          Array[File] imputed = results.imputed
-          File md5 = results.md5
+          Array[String] imputed = imputation_data_model.imputed_file_paths
           File qc_report = results.qc_report
           Array[File] qc_stats = results.qc_stats
-          Array[File] log = results.log
+          File log = results.log
           File validation_report = validate.validation_report
           Array[File]? tables = validate.tables
      }
@@ -83,16 +84,14 @@ task results {
      }
 
      output {      
-          #Array[File] imputed = glob("${job_id}/*/*")
-          Array[File] imputed = glob("${job_id}/local/*.gz")
-          File md5 = "${job_id}/local/results.md5"
-          File qc_report = "${job_id}/qcreport/qcreport.html"
-          Array[File] qc_stats = glob("${job_id}/statisticDir/*.txt")
-          Array[File] log = glob("${job_id}/logfile/*.log")
+          Array[File] imputed = glob("${job_id}/output/*.gz")
+          File qc_report = "${job_id}/output/quality-control.html"
+          Array[File] qc_stats = glob("${job_id}/output/statistics/*.txt")
+          File log = glob("${job_id}/output/qc_report.txt")
      }
 
      runtime {
-          docker: "uwgac/primed-imputation:0.2.0"
+          docker: "uwgac/primed-imputation:0.4.0"
           disks: "local-disk ${disk_gb} SSD"
      }
 }
@@ -100,6 +99,7 @@ task results {
 
 task imputation_data_model {
      input {
+          String dest_bucket
           Array[String] imputed_files
           String sample_set_id
           String source_dataset_id
@@ -126,11 +126,14 @@ task imputation_data_model {
         dat <- bind_rows(dat, tibble(field='quality_filter', value='~{quality_filter}')); \
         readr::write_tsv(dat, 'imputation_dataset_table.tsv'); \
         files <- readLines('~{write_lines(imputed_files)}'); \
+        dest_bucket <- sub('\\\\/$', '', '~{dest_bucket}'); \
+        new_files <- file.path(dest_bucket, basename(files)); \
+        for (i in seq_along(files)) AnVIL::gsutil_cp(files[i], new_files[i]); \
         chr <- str_extract(files, 'chr[:alnum:]+[:punct:]'); \
         chr <- sub('chr', '', chr, fixed=TRUE); \
         chr <- sub('.', '', chr, fixed=TRUE); \
         file_type <- ifelse(grepl('vcf', files), 'VCF', ifelse(grepl('info', files), 'quality metrics', 'supporting file')); \
-        dat <- tibble(file_path = files, chromosome = chr, file_type = file_type); \
+        dat <- tibble(file_path = new_files, chromosome = chr, file_type = file_type); \
         writeLines(dat[['file_path']], 'files.txt'); \
         readr::write_tsv(dat, 'imputation_file_table.tsv'); \
         "
@@ -154,6 +157,7 @@ task imputation_data_model {
             "imputation_dataset": "imputation_dataset_table.tsv",
             "imputation_file": "imputation_file_table.tsv"
         }
+        Array[String] imputed_file_paths = read_lines("files.txt")
      }
 
      runtime {
