@@ -57,7 +57,7 @@ workflow imputation_server_results {
           Array[String] imputed = imputation_data_model.imputed_file_paths
           File qc_report = results.qc_report
           Array[File] qc_stats = results.qc_stats
-          Array[File] log = results.log
+          File log = results.log
           File validation_report = validate.validation_report
           Array[File]? tables = validate.tables
      }
@@ -87,7 +87,7 @@ task results {
           Array[File] imputed = glob("${job_id}/output/*.gz")
           File qc_report = "${job_id}/output/quality-control.html"
           Array[File] qc_stats = glob("${job_id}/output/statistics/*.txt")
-          Array[File] log = glob("${job_id}/output/qc_report.txt")
+          File log = glob("${job_id}/output/qc_report.txt")
      }
 
      runtime {
